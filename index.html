@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>エンタメブキルーレット</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+</head>
+
+
+
+<body>
+    
+    <!-- メニューボタン -->
+    <button id="menuButton" onclick="openMenu()">三</button>
+
+    <!-- 背景を暗くする -->
+    <div id="overlay" onclick="closeMenu()"></div>
+
+    <!-- サイドメニュー -->
+    <div id="sideMenu">
+        <div id="sideMenuContent">
+
+            <button id="closeMenuButton" onclick="closeMenu()">×</button>
+
+            <h1 class="menuTitle">メニュー</h1>
+
+            <hr>
+
+            <h2 class="menuHeading">使い方</h2>
+
+            <p class="menuTextBp">
+                ・「回す」を押してブキを抽選します<br>
+            </p>
+            <p class="menuTextBp">
+                ・エンタメ度が高いブキほど、抽選されやすいです<br>
+            </p>
+            <p class="menuTextBp">
+                ・抽選後「確定」を押して表示されたブキを確定します<br>
+            </p>
+            <p class="menuTextBp">
+                ・「確定」を押すとエンタメポイントを獲得します<br>
+            </p>    
+            <p class="menuTextBp">
+                ・抽選後、エンタメポイントを使用してスキルを使用することができます<br>
+            <br>
+            </p>
+            
+
+            <hr>
+
+            <h2 class="menuHeading">データ管理</h2>
+
+            <p class="menuText">
+                エンタメポイントをリセットします<br>
+                スケジュール変更時などにどうぞ<br>
+            </p>
+
+            <button id="resetButton" onclick="resetData()">
+                リセット
+            </button>
+
+            <hr>
+
+            <h2 class="menuHeading">抽選確率</h2>
+
+            <p class="menuText">
+                エンタメ度 ★★★★★：40 %<br>
+                エンタメ度 ★★★★☆：25 %<br>
+                エンタメ度 ★★★☆☆：20 %<br>
+                エンタメ度 ★★☆☆☆：10 %<br>
+                エンタメ度 ★☆☆☆☆：5 %<br>
+                （各レアリティの内訳はまた後で追加するかもしれません）<br>
+            </p>
+
+            <hr>
+
+            <h2 class="menuHeading">注意事項</h2>
+            <p id="caution" class="menuTextBp">
+                ・このサイトはファンによって制作された非公式の二次創作コンテンツです<br>
+                原作ゲームおよびその運営・開発元とは一切関係ありません<br>
+                ゲーム内の名称・画像・その他の素材の権利は、それぞれの権利者に帰属します<br>
+            </p>
+            <p id="caution" class="menuTextBp">
+                ・このサイトはフレンドと一緒に遊ぶ時の使用を想定して作られています<br>
+                野良で使う場合は自己責任になります<br>
+            </p>
+            <p id="caution" class="menuTextBp">
+                ・サイト内の「エンタメ度」は個人の独断と偏見に基づいて設定されています
+                エンタメ度の高低はあくまで独自評価であり、ブキや使用者を批判・否定する意図はありません<br>
+                <br>
+            </p>
+
+            <hr>
+
+            <p id="credit" class="menuText">
+                <br>
+                Developed by ゆみキャン△<br>
+            </p>
+
+        </div>
+    </div>
+
+    <h1 class="title">ワクワク☆エンタメブキルーレット</h1>
+    <p class="subtitle">- For Splatoon 3 -</p>
+    
+    <div id="screenContainer">
+
+        <div id="startScreen">
+            <p class="bigText" id="currentWeaponDisplay">現在のブキ：</p>
+            <button class="MainButton" onclick="roll()">回す</button>
+        </div>
+
+
+        <div id="resultScreen" style="display: none;">
+            <div id="resultImageContainer">
+                <div id="mainImage">
+                    <img id="resultImage">
+                    <img id="resultImageFrame" src="images/frame.png">
+                </div>
+                <div id="resultImageSmall">
+                    <img id="resultImageSub">
+                    <img id="resultImageSpecial">
+                </div>
+            </div>
+            <h1 id="resultName" class="title" ></h1>
+            <p id="resultRarity" class="subtitle" ></p>
+            <button class="MainButton" onclick="confirmRoll()">確定</button>
+            
+            <div id="skillContainer">
+
+                <div class="skillCard">
+                    <h2 class="skillName">再抽選</h2>
+                    <p class="skillDescription">
+                        ルーレットをもう一度回します<br>
+                    </p>
+                    <p class="skillDescription" id="skill1Cost">
+                        コスト：10 EP
+                    </p>
+                    <button class="skillButton" id="skill1Button" onclick="skillReroll()">使用</button>
+                </div>
+
+            </div>
+        </div>
+    
+    </div>
+    <div id="pointArea">
+        <p id="pointChange"></p>
+        <p class="bigText" id="currentPoint">エンタメポイント</p>
+    </div>
+
+    <script src="newscript.js"></script>
+
+</body>
+
+
+
+</html>
