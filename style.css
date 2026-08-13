@@ -388,7 +388,7 @@ button:disabled {
 
     #menuButton {
 
-        top: 15dvh;
+        top: 15vh;
         left: 30px;
 
         width: 80px;
@@ -546,7 +546,7 @@ button:disabled {
         bottom: 5dvh;
         
         width: 48vw;
-        height: 8dvh;
+        height: 8vh;
     }
 
     #skillContainer {
