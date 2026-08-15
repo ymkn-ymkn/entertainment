@@ -321,6 +321,43 @@ body {
     height: 70px
 }
 
+#rouletteContainer {
+    z-index: 0;
+    position: fixed;
+    top: 25vh;
+    left: 50vw;
+    transform: translateX(-50%);
+    width: 400px;
+    height: 400px;
+}
+
+#roulette {
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 100%;
+    background: conic-gradient(
+        #ff0000 0deg 144deg,
+        #ffff00 144deg 234deg,
+        #00ff00 234deg 306deg,
+        #00ffff 306deg 342deg,
+        #0000ff 342deg 360deg
+    );
+}
+
+#pointer {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 20px solid white;
+}
+
 #skillContainer {
     position: fixed;
     top: 60%;
@@ -462,7 +499,7 @@ button:disabled {
             font-size: 5.8vw;
             margin-left: 2vw;
             margin-right: 2vw;
-            top: 50dvh;
+            top: 49dvh;
         }
 
     .subtitle {
@@ -482,7 +519,10 @@ button:disabled {
     #resultImageContainer {
         position: fixed;
         top: 13dvh;
+        left: 50%;
+        transform: translateX(-50%);
         gap: 5vw;
+
     }
 
         #mainImage {
@@ -533,13 +573,11 @@ button:disabled {
 
         #currentWeaponDisplay {
             position: fixed;
-            top: 19dvh;
+            top: 49dvh;
             left: 50%;
             transform: translateX(-50%);
-            width: 100%;
+            width: 910%;
             font-size: 4.5vw;
-            margin-right: 2vw;
-            margin-left: 2vw;
         }
 
         #currentPoint {
@@ -590,6 +628,7 @@ button:disabled {
         font-size: 36px;
     }
 
+    
     #pointArea {
         position: fixed;
         top: 80dvh;
@@ -602,7 +641,7 @@ button:disabled {
     }
 
     #pointChange {
-        font-size: 56px;
+        font-size: 4.5vw;
         position: absolute;
         left: 74%;
         top: -100px;

@@ -89,7 +89,7 @@
                 野良で使う場合は自己責任になります<br>
             </p>
             <p id="caution" class="menuTextBp">
-                ・サイト内の「エンタメ度」は個人の独断と偏見に基づいて設定されています
+                ・サイト内の「エンタメ度」は個人の独断と偏見に基づいて設定されています<br>
                 エンタメ度の高低はあくまで独自評価であり、ブキや使用者を批判・否定する意図はありません<br>
                 <br>
             </p>
@@ -98,7 +98,7 @@
 
             <p id="credit" class="menuText">
                 <br>
-                Developed by ゆみキャン△<br>
+                Developed by ゆみキャン△<br><br><br><br>
             </p>
 
         </div>
@@ -106,6 +106,16 @@
 
     <h1 class="title">ワクワク☆エンタメブキルーレット</h1>
     <p class="subtitle">- For Splatoon 3 -</p>
+    <div id="resultImageContainer">
+                <div id="mainImage">
+                    <img id="resultImage">
+                    <img id="resultImageFrame" src="images/frame.png">
+                </div>
+                <div id="resultImageSmall">
+                    <img id="resultImageSub">
+                    <img id="resultImageSpecial">
+                </div>
+            </div>
     
     <div id="screenContainer">
 
@@ -116,19 +126,9 @@
 
 
         <div id="resultScreen" style="display: none;">
-            <div id="resultImageContainer">
-                <div id="mainImage">
-                    <img id="resultImage">
-                    <img id="resultImageFrame" src="images/frame.png">
-                </div>
-                <div id="resultImageSmall">
-                    <img id="resultImageSub">
-                    <img id="resultImageSpecial">
-                </div>
-            </div>
             <h1 id="resultName" class="title" ></h1>
             <p id="resultRarity" class="subtitle" ></p>
-            <button class="MainButton" onclick="confirmRoll()">確定</button>
+            <button class="MainButton" id="confirmButton" onclick="confirmRoll()">確定</button>
             
             <div id="skillContainer">
 
