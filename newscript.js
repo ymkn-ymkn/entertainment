@@ -11,6 +11,7 @@
 // 宣言w
     let rarity;
     let rouletteRunning = false;
+    let atStartScreen = true;
 
 // weaponDataにcsv読み込み
     let weaponData = [];
@@ -72,6 +73,12 @@
             "images/special/wail.webp",
             "images/special/wavebreaker.webp",
             "images/special/zooka.webp",
+            "images/main/sample_empty.png",
+            "images/main/sample_hatena.png",
+            "images/sub/sample_empty.png",
+            "images/sub/sample_hatena.png",
+            "images/special/sample_empty.png",
+            "images/special/sample_hatena.png"
         ];
 
         imagePaths.forEach(path => {
@@ -100,8 +107,16 @@
     if (localStorage.getItem("currentWeapon") === null) {
         // 初回アクセス
         currentWeapon = {
-        name: "---"
+            name: "---",
+            image: "sample_empty.png",
+            sub: "sample_empty.png",
+            special: "sample_empty.png"
         };
+        document.getElementById("resultName").textContent = currentWeapon.name;
+        document.getElementById("resultImage").src = "images/main/" + currentWeapon.image;
+        document.getElementById("resultImageSub").src = "images/sub/" + currentWeapon.sub;
+        document.getElementById("resultImageSpecial").src = "images/special/" + currentWeapon.special;
+        
     } else {
         // 2回目以降
         currentWeapon = JSON.parse(localStorage.getItem("currentWeapon"));
@@ -131,6 +146,7 @@
 async function roll() {
     // 二重クリック防止用変数
     rouletteRunning = true;
+    atStartScreen = false;
 
     // 開始画面を隠す
     document.getElementById("startScreen").style.display = "none";
@@ -223,6 +239,7 @@ function confirmRoll() {
     document.getElementById("resultScreen").style.display = "none";
     // スタート画面表示、ルーレットリセット
     document.getElementById("startScreen").style.display = "flex";
+    atStartScreen = true;
 }
 
 // hasThirdKitを判定し、weaponVariantとそのcostを保存する関数 未来
@@ -544,6 +561,9 @@ function closeMenu() {
 // データリセットボタンを押したときに呼ばれる関数
 function resetData() {
 
+    // 二重クリック防止
+    if (!atStartScreen) return;
+
     if (!confirm("本当にデータをリセットしますか？")) {
         return;
     }
@@ -555,8 +575,15 @@ function resetData() {
     // 初期値に戻す
     entertainmentPoint = 15;
     currentWeapon = {
-        name: "---"
+            name: "---",
+            image: "sample_empty.png",
+            sub: "sample_empty.png",
+            special: "sample_empty.png"
         };
+    document.getElementById("resultName").textContent = currentWeapon.name;
+    document.getElementById("resultImage").src = "images/main/" + currentWeapon.image;
+    document.getElementById("resultImageSub").src = "images/sub/" + currentWeapon.sub;
+    document.getElementById("resultImageSpecial").src = "images/special/" + currentWeapon.special;
 
     // エンタメポイント表示更新、storage保存
     updatePointDisplay();
