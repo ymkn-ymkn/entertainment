@@ -5,7 +5,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>エンタメブキルーレット</title>
+    <title>ワクワク☆エンタメブキルーレット</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
 </head>
@@ -59,7 +59,7 @@
                 スケジュール変更時などにどうぞ<br>
             </p>
 
-            <button id="resetButton" onclick="resetData()">
+            <button class="insideMenuButton" onclick="resetData()">
                 リセット
             </button>
 
@@ -127,23 +127,23 @@
 
         <div id="resultScreen" style="display: none;">
             <h1 id="resultName" class="title" ></h1>
-            <p id="resultRarity" class="subtitle" ></p>
             <button class="MainButton" id="confirmButton" onclick="confirmRoll()">確定</button>
-            
-            <div id="skillContainer">
-
-                <div class="skillCard">
-                    <h2 class="skillName">再抽選</h2>
-                    <p class="skillDescription">
-                        ルーレットをもう一度回します<br>
-                    </p>
-                    <p class="skillDescription" id="skill1Cost">
-                        コスト：10 EP
-                    </p>
-                    <button class="skillButton" id="skill1Button" onclick="skillReroll()">使用</button>
+            <div id="hideWhileRolling">
+                <p id="resultRarity" class="subtitle" ></p>
+                <div id="skillContainer">
+                    <div class="skillCard">
+                        <h2 class="skillName">再抽選</h2>
+                        <p class="skillDescription">
+                            ルーレットをもう一度回します<br>
+                        </p>
+                        <p class="skillDescription" id="skill1Cost">
+                            コスト：15 EP
+                        </p>
+                        <button class="skillButton" id="skill1Button" onclick="skillReroll()">使用</button>
+                    </div>
                 </div>
-
             </div>
+            
         </div>
     
     </div>

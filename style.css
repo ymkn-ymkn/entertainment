@@ -4,17 +4,6 @@ body {
     min-height: 100dvh;
     background-color: #e2e2e2;
 }
-/* 
-    クエリするものたち
-    [とりま完]sideMenu: サイズ
-    [とりま完]sideMenuの中身： テキスト、ボタンのサイズ
-    [とりま完]closeMenuButton、menuButton: サイズ
-
-    中央揃えのテキスト: フォントサイズ
-    currentWeaponDisplay、currentPoint(pointArea): 中央揃え、フォントサイズ、下に配置
-    ボタン：サイズ
-
- */
 
 #overlay {
     z-index: 1000;
@@ -135,7 +124,7 @@ body {
     cursor: pointer;
 }
 
-#resetButton {
+.insideMenuButton {
     width: 60%;
     height: 50px;
 
@@ -423,7 +412,7 @@ button:disabled {
 
     #menuButton {
 
-        top: 10vh;
+        top: 9vh;
         left: 30px;
 
         width: 80px;
@@ -442,7 +431,7 @@ button:disabled {
         font-size: 50px;
     }
 
-    #resetButton {
+    .insideMenuButton {
         width: 40%;
         height: 75px;
         font-size: 36px;
@@ -586,9 +575,9 @@ button:disabled {
         }
 
     .MainButton {
-        font-size: 84px;
+        font-size: 7.5vw;
         
-        bottom: 5vh;
+        bottom: 8dvh;
         
         width: 48vw;
         height: 8dvh;
@@ -631,7 +620,7 @@ button:disabled {
     
     #pointArea {
         position: fixed;
-        top: 80dvh;
+        top: 79dvh;
         left: 50%;
         transform: translateX(-50%);
 

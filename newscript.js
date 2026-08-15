@@ -1,5 +1,6 @@
-// next課題: 抽選・確定の画面演出
+// next課題: 
 // 低確率で発動する演出
+// エンタメじゃないルーレットボタン
 // 亜種変更スキルにリベンジ
 
 // 効果音、BGMなど
@@ -11,8 +12,9 @@
     let rarity;
     let rouletteRunning = false;
 
-// csv読み込み
+// weaponDataにcsv読み込み
     let weaponData = [];
+    // weapon_list.csvからweaponDataに読み込む関数
     async function loadWeaponData() {
 
         const response = await fetch("weapon_list.csv");
@@ -27,25 +29,16 @@
 
         console.log("CSV読み込み完了");
     }
-
+    // ページを開いたら実行
     window.onload = async function () {
         await loadWeaponData();
 
-        // その後に画像読み込み
+        // csv読み込み後に画像読み込み
         weaponData.forEach(weapon => {
         const img = new Image();
-
-        img.onload = () => {
-            console.log(`成功：${img.src}`);
-        };
-
-        img.onerror = () => {
-            console.error(`失敗：${img.src}`);
-        };
-
         img.src = `images/main/${weapon.image}`;
-    });
-
+        });
+        // サブスペ手動
         const imagePaths = [
             "images/sub/auto.webp",
             "images/sub/beacon.webp",
@@ -93,7 +86,7 @@
 
     if (localStorage.getItem("entertainmentPoint") === null) {
         // 初回アクセス
-        entertainmentPoint = 10;
+        entertainmentPoint = 15;
         localStorage.setItem("entertainmentPoint", entertainmentPoint);
     } else {
         // 2回目以降
@@ -131,31 +124,30 @@
 
 
 
-//#region メインボタン
+//#region 「回す」または「確定」ボタン
 
 //　 「回す」ボタンが押されたときに呼ばれる関数
+// resultImageContainerを表示し、ルーレット演出が止め、resultScreenに移行するまで担当
 async function roll() {
     // 二重クリック防止用変数
     rouletteRunning = true;
 
     // 開始画面を隠す
     document.getElementById("startScreen").style.display = "none";
-    // 結果画面表示、必要なもの以外隠す
+    // resultScreenを映す
     document.getElementById("resultScreen").style.display = "flex";
-    document.getElementById("resultRarity").style.display = "none";
-    document.getElementById("skillContainer").style.display = "none";
+    document.getElementById("hideWhileRolling").style.display = "none";
 
     // ボタン表示変更
     document.getElementById("confirmButton").style.color = "gray";
     document.getElementById("confirmButton").textContent = "抽選中.";
 
-    //rouletteAngle = Math.random() * 360;
-    //rouletteSpeed = Math.random() * (120 - 100) + 100;
-
+    // whileループの回数と待機時間
     let loopCount = 0;
     let loopTime = 50;
 
-    // 減速開始
+    // ルーレット開始
+    // 初速部分
     while (loopCount <= 20) {
         loopCount ++;
 
@@ -186,12 +178,12 @@ async function roll() {
 
     //　最後のブキをランダム抽選、currentWeapon保存
     getRandomWeapon();
-
+    // この時点でストレージ同期
+    updateCurrentWeaponDisplay();
     // 結果表示
     showResult();
 
-    document.getElementById("resultRarity").style.display = "flex";
-    document.getElementById("skillContainer").style.display = "flex";
+    document.getElementById("hideWhileRolling").style.display = "flex";
     document.getElementById("confirmButton").style.color = "black";
     document.getElementById("confirmButton").textContent = "確定"
 
@@ -209,9 +201,6 @@ function confirmRoll() {
 
     // 二重クリック防止
     if (rouletteRunning) return;
-    
-    // 結果画面を隠す
-    document.getElementById("resultScreen").style.display = "none";
 
     // エンタメポイントを加算・更新
     if (rarity === "5") {
@@ -230,6 +219,8 @@ function confirmRoll() {
         changePoint(3);
     }
 
+    // 結果画面を隠す
+    document.getElementById("resultScreen").style.display = "none";
     // スタート画面表示、ルーレットリセット
     document.getElementById("startScreen").style.display = "flex";
 }
@@ -284,40 +275,16 @@ function updateWeaponVariant(){
 
 // ルーレットの表示だけの部分
 function rouletteEffect() {
-    // ガチャ結果を計算
-    const rand = Math.random() * 100;
+    getRandomWeapon();
 
-    if (rand < 40) {
-        rarity = "5";      // 40%
-    } else if (rand < 65) {
-        rarity = "4";       // 25%
-    } else if (rand < 85) {
-        rarity = "3";        // 20%
-    } else if (rand < 95) {
-        rarity = "2";        // 10%
-    } else {
-        rarity = "1";        // 5%
-    }
-
-    // 同じレアリティだけ抽出
-    const candidates = weaponData.filter(item => item.rarity === rarity);
-    
-    // 該当するレアリティがない場合のエラーハンドリング
-    if (candidates.length === 0) {
-        console.error("該当するレアリティがありません:", rarity);
-        return;
-    }
-
-    currentWeapon = candidates[Math.floor(Math.random() * candidates.length)];
-
-    // 表示更新
+    // 名前と画像をcsvから引っ張ってくる
     document.getElementById("resultName").textContent = currentWeapon.name;
     document.getElementById("resultImage").src = "images/main/" + currentWeapon.image;
     document.getElementById("resultImageSub").src = "images/sub/" + currentWeapon.sub;
     document.getElementById("resultImageSpecial").src = "images/special/" + currentWeapon.special;
 }
 
-// ルーレットの乱数を生成し、currentWeaponに保存し、ストレージに同期する関数
+// ルーレットの乱数を生成し、currentWeaponに保存する関数
 function getRandomWeapon() {
 
     // ガチャ結果を計算
@@ -346,12 +313,11 @@ function getRandomWeapon() {
     
     // ランダムに1つ選択、currentWeaponに保存（全体で使える）
     currentWeapon = candidates[Math.floor(Math.random() * candidates.length)];
-    // この時点でストレージ同期
-    updateCurrentWeaponDisplay();
 
 }
 
-// 抽選やスキル使用後などで結果表示を更新する関数（表示自体はしない）
+// 抽選やスキル使用後などで結果表示を更新する関数（表示on/off自体はしない）
+// 事前にcurrentWeaponとrarityを用意
 function showResult() {
     // 名前と画像をcsvから引っ張ってくる
     document.getElementById("resultName").textContent = currentWeapon.name;
@@ -375,14 +341,14 @@ function showResult() {
     else {
         document.getElementById("resultRarity").textContent = "エンタメ度: ★☆☆☆☆";
     }
-    
+
 }
 
 // currentWeaponDisplayを更新しlocalStorageに保存する関数
 function updateCurrentWeaponDisplay() {
     document.getElementById("currentWeaponDisplay").textContent =
         "現在のブキ：" + currentWeapon.name;
-
+        
     localStorage.setItem(
         "currentWeapon",
         JSON.stringify(currentWeapon)
@@ -427,7 +393,7 @@ function changePoint(amount) {
 // 全てのスキルの使用可否の表示を更新する関数
 function updateAllSkillDisplays() {
 
-    updateSkillDisplay("skill1", 10);
+    updateSkillDisplay("skill1", 15);
 }
 
 // 各スキルの使用可否の表示を更新する関数
@@ -451,11 +417,9 @@ function updateSkillDisplay(skillId, cost) {
 // 再抽選スキルボタンが押された時に呼ばれる関数
 function skillReroll() {
     // エンタメポイントを減算
-    changePoint(-10)
+    changePoint(-15)
     // 再抽選
-    document.getElementById("startScreen").style.display = "flex";
-    rouletteRunning = true;
-    document.getElementById("resultScreen").style.display = "none";
+    document.getElementById("hideWhileRolling").style.display = "none";
     roll()
 }
 
@@ -580,7 +544,7 @@ function closeMenu() {
 // データリセットボタンを押したときに呼ばれる関数
 function resetData() {
 
-    if (!confirm("本当にデータをリセットしますか？\nこの操作は元に戻せません。")) {
+    if (!confirm("本当にデータをリセットしますか？")) {
         return;
     }
 
@@ -589,7 +553,7 @@ function resetData() {
     localStorage.removeItem("currentWeapon");
 
     // 初期値に戻す
-    entertainmentPoint = 10;
+    entertainmentPoint = 15;
     currentWeapon = {
         name: "---"
         };
