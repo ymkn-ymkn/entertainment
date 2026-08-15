@@ -32,6 +32,51 @@
         await loadWeaponData();
     };
 
+// 画像読み込み
+    weaponData.forEach(weapon => {
+        const img = new Image();
+        img.src = `images/main/${weapon.image}`;
+    });
+    const imagePaths = [
+        "images/sub/auto.webp",
+        "images/sub/beacon.webp",
+        "images/sub/burst.webp",
+        "images/sub/curling.webp",
+        "images/sub/dart.webp",
+        "images/sub/fizzy.webp",
+        "images/sub/mine.webp",
+        "images/sub/mist.webp",
+        "images/sub/sensor.webp",
+        "images/sub/splat.webp",
+        "images/sub/sprinkler.webp",
+        "images/sub/suction.webp",
+        "images/sub/torp.webp",
+        "images/sub/wall.webp",
+        "images/special/booyah.webp",
+        "images/special/bubbler.webp",
+        "images/special/chumps.webp",
+        "images/special/cooler.webp",
+        "images/special/crab.webp",
+        "images/special/inkjet.webp",
+        "images/special/inkstorm.webp",
+        "images/special/kraken.webp",
+        "images/special/missiles.webp",
+        "images/special/screen.webp",
+        "images/special/slider.webp",
+        "images/special/splashdown.webp",
+        "images/special/stamp.webp",
+        "images/special/strikes.webp",
+        "images/special/vac.webp",
+        "images/special/wail.webp",
+        "images/special/wavebreaker.webp",
+        "images/special/zooka.webp",
+    ];
+
+    imagePaths.forEach(path => {
+        const img = new Image();
+        img.src = path;
+    });
+
 // エンタメポイント初期化または引き継ぎ
     let entertainmentPoint;
 
@@ -56,6 +101,9 @@
     } else {
         // 2回目以降
         currentWeapon = JSON.parse(localStorage.getItem("currentWeapon"));
+        document.getElementById("resultImage").src = "images/main/" + currentWeapon.image;
+        document.getElementById("resultImageSub").src = "images/sub/" + currentWeapon.sub;
+        document.getElementById("resultImageSpecial").src = "images/special/" + currentWeapon.special;
     }
     updateCurrentWeaponDisplay();
 
