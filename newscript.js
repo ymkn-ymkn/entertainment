@@ -36,9 +36,46 @@
         await loadWeaponData();
 
         // csv読み込み後に画像読み込み
-        weaponData.forEach(weapon => {
-        const img = new Image();
-        img.src = `images/main/${weapon.image}`;
+        loadImages();
+        
+    };
+
+    // 画像クリアされているか
+    let hiddenTime = null;
+
+    document.addEventListener("visibilitychange", async () => {
+        if (document.visibilityState !== "visible") return;
+
+        console.log("サイトに戻ってきました");
+
+        // ランダムに5枚選ぶ
+        const checkWeapons = [...weaponData]
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 5);
+
+        for (const weapon of checkWeapons) {
+            const src = `images/main/${weapon.image}`;
+
+            const img = new Image();
+
+            img.onload = () => {
+                console.log(`${weapon.image}：正常`);
+            };
+
+            img.onerror = () => {
+                console.log(`${weapon.image}：読み込み失敗`);
+                loadImages();
+            };
+
+            img.src = src;
+        }
+    });
+
+// 画像読み込み用関数
+function loadImages() {
+    weaponData.forEach(weapon => {
+            const img = new Image();
+            img.src = `images/main/${weapon.image}`;
         });
         // サブスペ手動
         const imagePaths = [
@@ -86,8 +123,7 @@
             const img = new Image();
             img.src = path;
         });
-    };
-
+}
 
 // エンタメポイント初期化または引き継ぎ
     let entertainmentPoint;
