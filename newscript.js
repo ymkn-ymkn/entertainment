@@ -12,6 +12,7 @@
     let rarity;
     let rouletteRunning = false;
     let atStartScreen = true;
+    let kouhaModeIsOn = false;
 
 // weaponDataにcsv読み込み
     let weaponData = [];
@@ -164,10 +165,10 @@ async function roll() {
 
     // ルーレット開始
     // 初速部分
-    while (loopCount <= 20) {
+    while (loopCount <= 25) {
         loopCount ++;
 
-        rouletteEffect();
+        noEntertainmentEffect();
         
         if (loopCount == 10) {
             document.getElementById("confirmButton").textContent = "抽選中..";
@@ -181,11 +182,11 @@ async function roll() {
         });
     }
 
-    while (loopCount < 38) {
+    while (loopCount <= 37) {
         loopCount ++;
-        loopTime += 6;
+        loopTime += 10;
 
-        rouletteEffect();
+        noEntertainmentEffect();
 
         await new Promise(resolve => {
             setTimeout(resolve, loopTime);
@@ -193,13 +194,20 @@ async function roll() {
     }
 
     //　最後のブキをランダム抽選、currentWeapon保存
-    getRandomWeapon();
+    if (kouhaModeIsOn) {
+        noEntertainmentWeapon();
+    } else {
+        getRandomWeapon();
+    }
     // この時点でストレージ同期
     updateCurrentWeaponDisplay();
     // 結果表示
     showResult();
 
     document.getElementById("hideWhileRolling").style.display = "flex";
+    if (kouhaModeIsOn) {
+        document.getElementById("resultRarity").style.display = "none";
+    }
     document.getElementById("confirmButton").style.color = "black";
     document.getElementById("confirmButton").textContent = "確定"
 
@@ -219,7 +227,10 @@ function confirmRoll() {
     if (rouletteRunning) return;
 
     // エンタメポイントを加算・更新
-    if (rarity === "5") {
+    if (kouhaModeIsOn) {
+        changePoint(5);
+    }
+    else if (rarity === "5") {
         changePoint(10);
     }
     else if (rarity === "4") {
@@ -301,6 +312,16 @@ function rouletteEffect() {
     document.getElementById("resultImageSpecial").src = "images/special/" + currentWeapon.special;
 }
 
+function noEntertainmentEffect() {
+    noEntertainmentWeapon();
+
+    // 名前と画像をcsvから引っ張ってくる
+    document.getElementById("resultName").textContent = currentWeapon.name;
+    document.getElementById("resultImage").src = "images/main/" + currentWeapon.image;
+    document.getElementById("resultImageSub").src = "images/sub/" + currentWeapon.sub;
+    document.getElementById("resultImageSpecial").src = "images/special/" + currentWeapon.special;
+}
+
 // ルーレットの乱数を生成し、currentWeaponに保存する関数
 function getRandomWeapon() {
 
@@ -330,6 +351,14 @@ function getRandomWeapon() {
     
     // ランダムに1つ選択、currentWeaponに保存（全体で使える）
     currentWeapon = candidates[Math.floor(Math.random() * candidates.length)];
+
+}
+
+// エンタメ度を無視したルーレットの乱数生成の関数
+function noEntertainmentWeapon() {
+    
+    // ランダムに1つ選択、currentWeaponに保存（全体で使える）
+    currentWeapon = weaponData[Math.floor(Math.random() * weaponData.length)];
 
 }
 
@@ -561,7 +590,7 @@ function closeMenu() {
 // データリセットボタンを押したときに呼ばれる関数
 function resetData() {
 
-    // 二重クリック防止
+    // 変なタイミングでのクリック防止
     if (!atStartScreen) return;
 
     if (!confirm("本当にデータをリセットしますか？")) {
@@ -591,6 +620,47 @@ function resetData() {
     updateCurrentWeaponDisplay();
     // スキル表示更新
     updateAllSkillDisplays();
+
+    // メニューを閉じる
+    closeMenu();
+
+}
+
+// データリセットボタンを押したときに呼ばれる関数
+function kouhaModeOn() {
+
+    // 変なタイミングでのクリック防止
+    if (!atStartScreen) return;
+
+    // 処理更新
+    kouhaModeIsOn = true;
+
+    // タイトル更新
+    document.getElementById("bigTitle").textContent = "ワクワク☆ただのブキルーレット";
+
+    // ボタン更新
+    document.getElementById("kouhaButton").textContent = "オフにする";
+    document.getElementById("kouhaButton").onclick = kouhaModeOff;
+
+    // メニューを閉じる
+    closeMenu();
+
+}
+function kouhaModeOff() {
+
+    // 変なタイミングでのクリック防止
+    if (!atStartScreen) return;
+
+    // 処理更新
+    kouhaModeIsOn = false;
+
+    // タイトル更新
+    document.getElementById("bigTitle").textContent = "ワクワク☆エンタメブキルーレット";
+
+    // ボタン更新
+    document.getElementById("kouhaButton").textContent = "オンにする";
+    document.getElementById("kouhaButton").onclick = kouhaModeOn;
+
 
     // メニューを閉じる
     closeMenu();

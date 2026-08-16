@@ -27,6 +27,32 @@
             <button id="closeMenuButton" onclick="closeMenu()">×</button>
 
             <h1 class="menuTitle">メニュー</h1>
+            
+            <hr>
+
+            <h2 class="menuHeading">データ管理</h2>
+
+            <p class="menuText">
+                エンタメポイントをリセットします<br>
+                スケジュール変更時などにどうぞ<br>
+            </p>
+
+            <button class="insideMenuButton" onclick="resetData()">
+                リセット
+            </button>
+
+            <hr>
+
+            <h2 class="menuHeading">硬派モード</h2>
+
+            <p class="menuText">
+                エンタメ度が抽選結果に影響しなくなります<br>
+                つまり、ただのブキルーレットになります<br>
+            </p>
+
+            <button class="insideMenuButton" id="kouhaButton" onclick="kouhaModeOn()">
+                オンにする
+            </button>
 
             <hr>
 
@@ -48,20 +74,6 @@
                 ・抽選後、エンタメポイントを使用してスキルを使用することができます<br>
             <br>
             </p>
-            
-
-            <hr>
-
-            <h2 class="menuHeading">データ管理</h2>
-
-            <p class="menuText">
-                エンタメポイントをリセットします<br>
-                スケジュール変更時などにどうぞ<br>
-            </p>
-
-            <button class="insideMenuButton" onclick="resetData()">
-                リセット
-            </button>
 
             <hr>
 
@@ -104,7 +116,7 @@
         </div>
     </div>
 
-    <h1 class="title">ワクワク☆エンタメブキルーレット</h1>
+    <h1 class="title" id="bigTitle">ワクワク☆エンタメブキルーレット</h1>
     <p class="subtitle">- For Splatoon 3 -</p>
     <div id="resultImageContainer">
                 <div id="mainImage">
