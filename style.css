@@ -588,18 +588,26 @@ button:disabled {
         top: 59dvh;
         left: 50%;
         transform: translateX(-50%);
-        width: 90vw;
+        width: 80vw;
         height: 20vh;
+
+        flex-direction: row;
+        overflow-x: auto;
+        overflow-y: hidden;
+        gap: 3vw;
     }
 
     .skillCard {
-        width: 55vw;
+        width: 40vw;
         padding: 20px;
         margin: 0px auto;
 
         border-radius: 20px;
 
         gap: 4px;
+        
+        flex-shrink: 0;
+        margin-bottom: 1vh;
     }
 
     .skillName {

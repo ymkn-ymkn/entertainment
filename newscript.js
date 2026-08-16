@@ -1,7 +1,5 @@
 // next課題: 
 // 低確率で発動する演出
-// エンタメじゃないルーレットボタン
-// 亜種変更スキルにリベンジ
 
 // 効果音、BGMなど
 // 英語対応...?
@@ -10,6 +8,8 @@
 
 // 宣言w
     let rarity;
+    let altWeapon1;
+    let altWeapon2;
     let rouletteRunning = false;
     let atStartScreen = true;
     let kouhaModeIsOn = false;
@@ -20,13 +20,13 @@
     async function loadWeaponData() {
 
         const response = await fetch("weapon_list.csv");
-        const text = await response.text();
+        const text = (await response.text()).replace(/\r/g, "");
 
         const rows = text.trim().split("\n");
 
         weaponData = rows.slice(1).map(row => {
-            const [rarity, name, image, mainid, sub, special] = row.split(",");
-            return { rarity, name, image, mainid, sub, special };
+            const [rarity, name, image, mainid, sub, special, alt1, alt2] = row.split(",");
+            return { rarity, name, image, mainid, sub, special, alt1, alt2 };
         });
 
         console.log("CSV読み込み完了");
@@ -46,7 +46,7 @@
     document.addEventListener("visibilitychange", async () => {
         if (document.visibilityState !== "visible") return;
 
-        console.log("サイトに戻ってきました");
+        // console.log("サイトに戻ってきました");
 
         // ランダムに5枚選ぶ
         const checkWeapons = [...weaponData]
@@ -59,11 +59,11 @@
             const img = new Image();
 
             img.onload = () => {
-                console.log(`${weapon.image}：正常`);
+                // console.log(`${weapon.image}：正常`);
             };
 
             img.onerror = () => {
-                console.log(`${weapon.image}：読み込み失敗`);
+                // console.log(`${weapon.image}：読み込み失敗`);
                 loadImages();
             };
 
@@ -194,7 +194,7 @@ async function roll() {
     // ボタン表示変更
     document.getElementById("confirmButton").style.color = "gray";
     document.getElementById("confirmButton").textContent = "抽選中.";
-
+    document.getElementById("skillContainer").scrollLeft = 0;
     // whileループの回数と待機時間
     let loopCount = 0;
     let loopTime = 50;
@@ -235,6 +235,8 @@ async function roll() {
     } else {
         getRandomWeapon();
     }
+    // 亜種を保存
+    saveAltWeapon();
     // この時点でストレージ同期
     updateCurrentWeaponDisplay();
     // 結果表示
@@ -246,9 +248,6 @@ async function roll() {
     }
     document.getElementById("confirmButton").style.color = "black";
     document.getElementById("confirmButton").textContent = "確定"
-
-    // 亜種変更スキル用にweaponVariant保存、hasThirdKit判定
-    // checkWeaponVariant();
     
     // スキル表示更新
     updateAllSkillDisplays();
@@ -287,47 +286,6 @@ function confirmRoll() {
     // スタート画面表示、ルーレットリセット
     document.getElementById("startScreen").style.display = "flex";
     atStartScreen = true;
-}
-
-// hasThirdKitを判定し、weaponVariantとそのcostを保存する関数 未来
-function checkWeaponVariant(){
-//     // weaponVariant登録
-//     weaponVariant = weaponData.filter(item =>
-//         item.mainid === currentWeapon.mainid &&
-//         item.name !== currentWeapon.name
-//     );
-    
-//     // hasThirdKit判定
-//     if (weaponVariant.length === 2) {
-//         hasThirdKit = true;
-//     } else {
-//         hasThirdKit = false;
-//     }
-
-//     // costの値を設定
-//     weaponVariant.forEach((weapon) => {
-//             if (weapon.rarity === "5") {
-//                 weapon.cost = 10;
-//             }
-//             else if (weapon.rarity === "4") {
-//                 weapon.cost = 12;
-//             }
-//             else if (weapon.rarity === "3") {
-//                 weapon.cost = 14;
-//             }
-//             else if (weapon.rarity === "2") {
-//                 weapon.cost = 16;
-//             }
-//             else {
-//                 weapon.cost = 18;
-//             }
-//         }
-//     );
-}
-
-// roll後などで亜種スキルの表記更新に使う関数 未来 ->upddateCurrentWeaponDisplayでやる？
-function updateWeaponVariant(){
-        
 }
 
 
@@ -472,6 +430,35 @@ function changePoint(amount) {
         text.classList.add("animate");
     }
 
+// ブキcurrentWeapon後に亜種を変数に保存し、skillCardのオンオフを切り替える関数
+function saveAltWeapon() {
+    altWeapon1 = weaponData.find(
+        weapon => weapon.name === currentWeapon.alt1
+    );
+    document.getElementById("firstAltSkillDescription").textContent = altWeapon1.name + "に変更します";
+    document.getElementById("skill2Button").onclick = () => {
+        skillAltWeapon(altWeapon1.name);
+    };
+
+    if (currentWeapon.alt2 !== "non") {
+        // skillCard表示
+        document.getElementById("secondAltSkill").style.display = "flex";
+        // 保存
+        altWeapon2 = weaponData.find(
+            weapon => weapon.name === currentWeapon.alt2
+        );
+        document.getElementById("secondAltSkillDescription").textContent = altWeapon2.name + "に変更します";
+        document.getElementById("skill3Button").onclick = () => {
+            skillAltWeapon(altWeapon2.name);
+        };
+    } else {
+        // skillCard非表示
+        document.getElementById("secondAltSkill").style.display = "none";
+        altWeapon2 = "";
+    }
+
+}
+
 // 全てのスキルの使用可否の表示を更新する関数
 function updateAllSkillDisplays() {
 
@@ -505,85 +492,24 @@ function skillReroll() {
     roll()
 }
 
-// 未来
-// function skillChangeWeapon(name) {
-    
-//     // エンタメポイントを減算
-//     entertainmentPoint -= 10;
-//     updatePointDisplay();
-//     updateAllSkillDisplays();
-//     showPointChange(-10);
+function skillAltWeapon(name) {
+    // エンタメポイントを減算
+    changePoint(-10);
 
+    // ここで指定のブキをcurrentWeaponに保存する
+    currentWeapon = weaponData.find(
+        weapon => weapon.name === name
+    );
 
-//     // 名前が一致するブキを取得
-//     const result = weaponData.find(weapon => weapon.name === name);
-
-//     if (!result) {
-//         console.error("ブキが見つかりません:", name);
-//         return;
-//     }
-
-//     console.log(result);
-
-//     // 結果表示
-//     document.getElementById("resultName").textContent = result.name;
-//     document.getElementById("resultImage").src = "images/main/" + result.image;
-//     if (rarity === "5") {
-//         resultRarity.textContent = "エンタメ度: ★★★★★";
-//     }
-//     else if (rarity === "4") {
-//         resultRarity.textContent = "エンタメ度: ★★★★☆";
-//     }
-//     else if (rarity === "3") {
-//         resultRarity.textContent = "エンタメ度: ★★★☆☆";
-//     }
-//     else if (rarity === "2") {
-//         resultRarity.textContent = "エンタメ度: ★★☆☆☆";
-//     }
-//     else {
-//         resultRarity.textContent = "エンタメ度: ★☆☆☆☆";
-//     }
-
-//     // 結果画面表示
-//     document.getElementById("resultScreen").style.display = "flex";
-
-//     // 結果保存
-//     currentWeapon = result.name;
-
-//     // 亜種変更用に保存
-//     const sameMainWeapons = weaponData.filter(item =>
-//     item.mainid === result.mainid &&
-//     item.name !== result.name
-//     );
-
-//     let html = `
-//     <h2 class="skillName">亜種変更</h2>
-//     `;
-    
-//     sameMainWeapons.forEach((weapon,index) => {
-
-//         html += `
-//             <p class="skillDescription">${weapon.name}に変更します</p>
-//             <p class="skillDescription" id="skill2-${index}Cost">
-//                 コスト：10 EP
-//             </p>
-//             <button class="skillButton" id="skill2-${index}Button" onclick="skillChangeWeapon('${weapon.name}')">
-//                 使用
-//             </button>
-//         `;
-
-//     });
-
-//     document.getElementById("skill2Card").innerHTML = html;
-
-//     updateAllSkillDisplays();
-
-//     console.log("乱数:", rand);
-//     console.log("レアリティ:", rarity);
-//     console.log("候補数:", candidates.length);
-//     console.log("結果:", result);
-
-// }
+    // 亜種を保存
+    saveAltWeapon();
+    // この時点でストレージ同期
+    updateCurrentWeaponDisplay();
+    // 結果表示
+    showResult();
+    // スキル表示更新
+    updateAllSkillDisplays();
+}
 
 //#endregion
 
@@ -672,7 +598,7 @@ function kouhaModeOn() {
     kouhaModeIsOn = true;
 
     // タイトル更新
-    document.getElementById("bigTitle").textContent = "ワクワク☆ただのブキルーレット";
+    document.getElementById("bigTitle").textContent = "硬派硬派☆ただのブキルーレット";
 
     // ボタン更新
     document.getElementById("kouhaButton").textContent = "オフにする";
