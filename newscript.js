@@ -500,6 +500,8 @@ function skillAltWeapon(name) {
     currentWeapon = weaponData.find(
         weapon => weapon.name === name
     );
+    // rarity更新
+    rarity = currentWeapon.rarity
 
     // 亜種を保存
     saveAltWeapon();
